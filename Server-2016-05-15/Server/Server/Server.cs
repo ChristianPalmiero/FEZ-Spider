@@ -50,6 +50,10 @@ namespace ServerPack
         private ManualResetEvent allDone = new ManualResetEvent(false);
         // Database connection
         private Database db = new Database("localhost", "Chris", "christian8", "sys");
+        // Log file
+        private string logFile = @"C:\Users\Chris\Documents\Visual Studio 2013\Projects\Server-2016-05-15\Current Log File.txt";
+        FileStream fs;
+        // TODO: REMOVE THE CONTENT OF THE FILE WHEN THE EMAIL IS SENT
 
         public void StartListening()
         {
@@ -60,6 +64,14 @@ namespace ServerPack
             // TCP/IP socket
             Socket listener = new Socket(AddressFamily.InterNetwork,
                 SocketType.Stream, ProtocolType.Tcp);
+
+            // Create the Log file
+            if (File.Exists(logFile))
+            {
+                File.Delete(logFile);
+            }
+            fs = File.Create(logFile);
+            fs.Close();
             // Bind the socket to the local endpoint and listen for incoming connections
             try
             {
@@ -137,6 +149,8 @@ namespace ServerPack
             bool control = false;
             // Read data from the client socket
             int bytesRead = handler.EndReceive(ar);
+            // String to be written into the Log file
+            string text;
 
             if (bytesRead > 0)
             {
@@ -154,16 +168,22 @@ namespace ServerPack
                             string[] tokens = System.Text.Encoding.UTF8.GetString(state._contentDynamicBuff).Split('@');
                             state.username = tokens[0];
                             state.password = tokens[1];
+                            text = "Attempt of login with these credentials -> Username: " + state.username + ", Password: " + state.password;
+                            WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
                             control = CheckUserPass(System.Text.Encoding.UTF8.GetString(state._contentDynamicBuff));
                             if (control == true)
                             {
                                 // Send the ACK and move to the next stage
+                                text = "Login OK";
+                                WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
                                 Send(handler, "ACK");
                                 state.receiving_stage++;
                             }
                             else
                             {
                                 // Send the NACK and remain in the current stage
+                                text = "Login Failed";
+                                WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
                                 Send(handler, "NACK");
                             }
                             break;
@@ -179,16 +199,24 @@ namespace ServerPack
                             //state.coeff = state.f.Matching(state._contentDynamicBuff, state.img);
                             // If coeff >= 0.5  => Same person
                             if (state.coeff == -1){
+                                text = "Picture taken. Result: the picture does not contain only one face; the user has to retake the picture";
+                                WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
                                 Send(handler, "NACKS");
                             }
                             else if (state.coeff >= 0.5)
                             {
                                 // Send the ACK and remain in the current stage
+                                text = "Picture taken. Result: Match";
+                                WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
+                                text = "Authorized access";
+                                WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
                                 Send(handler, "ACK");
                             }
                             else
                             {
                                 // Send the NACK and move to the next stage
+                                text = "Picture taken. Result: Non match";
+                                WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
                                 Send(handler, "NACK");
                                 state.receiving_stage++;
                             }
@@ -198,6 +226,8 @@ namespace ServerPack
                             // Generate nonce
                             //state.nonce = GenerateRandomNumber();
                             state.nonce = "0000";
+                            text = "Nonce to be inserted equal to " + state.nonce;
+                                WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
                             Console.WriteLine("Generated nonce: " + state.nonce);
                             // Send nonce as sms
                             //SendSMS(state.nonce);
@@ -205,15 +235,23 @@ namespace ServerPack
                             if (control == true)
                             {
                                 // Send the ACK and move to the next stage
+                                text = "Nonce correctly inserted at attempt " + (state.cnt+1);
+                                WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
+                                text = "Authorized access";
+                                WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
                                 Send(handler, "ACK");
                                 state.receiving_stage++;
                             }
                             else
                             {
                                 // Send the NACK and remain in the current stage, unless there is no available trial
+                                text = "Nonce not correctly inserted at attempt " + (state.cnt + 1);
+                                WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
                                 Send(handler, "NACK");
                                 if (state.cnt == 2)
                                 {
+                                    text = "Failed access";
+                                    WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
                                     state.receiving_stage++;
                                 }
                             }
@@ -288,6 +326,17 @@ namespace ServerPack
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+            }
+        }
+
+        private void WriteLogFile(string s, string IPAddr, string user, string path)
+        {
+
+            string str = "IP Address and port: " + IPAddr + ", User: " + user + ", Timestamp: " + DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
+            using (StreamWriter sw = File.AppendText(path))
+            {
+                sw.WriteLine(str);
+                sw.WriteLine(s);
             }
         }
 
