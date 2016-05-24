@@ -141,7 +141,12 @@ namespace Client
             string response = SendImage(server, output);
             flag = false;
             Debug.Print("Response = " + response);
-            if ((response.IndexOf("ACK")) == 0)
+            if ((response.IndexOf("NACKS")) == 0)
+            {
+                Debug.Print("Retake a picture");
+                display.RetakePicture();
+            }
+            else if ((response.IndexOf("ACK")) == 0)
             {
                 Debug.Print("Face matching OK");
                 flag = true;

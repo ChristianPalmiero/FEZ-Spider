@@ -152,6 +152,12 @@ namespace Client
             CredentialsWindow();
         }
 
+        private void GoToPicture(object sender)
+        {
+            // Third window: TAKE A PICTURE
+            PictureWindow();
+        }
+
         private void BackToLogin(object sender)
         {
             // Starting window: LOGIN
@@ -179,6 +185,16 @@ namespace Client
         {
             // The following method executes the face matching algorithm and is followed by the AfterMaching method
             client.Matching();
+        }
+
+        public void RetakePicture()
+        {
+            // Load the XML string
+            Window window = GlideLoader.LoadWindow(Resources.GetString(Resources.StringResources.RetakePicture));
+            Glide.MainWindow = window;
+            // Back button event handler
+            Button backBtn = (Button)window.GetChildByName("back_button");
+            backBtn.TapEvent += GoToPicture;
         }
 
         public void AfterMatching(bool flag)

@@ -41,6 +41,7 @@ namespace Client
             WrongNonce = -29245,
             Picture = -12689,
             Authorized = -11101,
+            RetakePicture = -1142,
             NotUsers = 5993,
             EmptyNonce = 6278,
             Users = 17569,

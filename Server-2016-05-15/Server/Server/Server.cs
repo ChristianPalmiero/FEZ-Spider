@@ -178,7 +178,10 @@ namespace ServerPack
                             //fs.Close();
                             //state.coeff = state.f.Matching(state._contentDynamicBuff, state.img);
                             // If coeff >= 0.5  => Same person
-                            if (state.coeff >= 0.5)
+                            if (state.coeff == -1){
+                                Send(handler, "NACKS");
+                            }
+                            else if (state.coeff >= 0.5)
                             {
                                 // Send the ACK and remain in the current stage
                                 Send(handler, "ACK");

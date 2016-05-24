@@ -199,4 +199,12 @@
   &lt;/Window&gt;
 &lt;/Glide&gt;</value>
   </data>
+  <data name="RetakePicture" xml:space="preserve">
+    <value>&lt;Glide Version="1.0.7"&gt;
+  &lt;Window Name="picture" Width="320" Height="240" BackColor="4fc3f7"&gt;
+    &lt;TextBlock Name="textBlock" X="84" Y="35" Width="150" Height="64" Alpha="255" Text="Retake the picture only with your face" TextAlign="Center" TextVerticalAlign="Top" Font="4" FontColor="000000" BackColor="000000" ShowBackColor="False"/&gt;
+    &lt;Button Name="back_button" X="119" Y="110" Width="80" Height="32" Alpha="255" Text="Retry" Font="5" FontColor="000000" DisabledFontColor="808080" TintColor="000000" TintAmount="0"/&gt;
+  &lt;/Window&gt;
+&lt;/Glide&gt;</value>
+  </data>
 </root>

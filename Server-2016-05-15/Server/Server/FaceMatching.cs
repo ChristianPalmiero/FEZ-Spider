@@ -39,9 +39,15 @@ namespace ServerPack
             }).Wait();
 
             //TODO: Controlli sul numero di facce, cioè elementi in photos
-
-            this.MakeRequest();
-            return coeff;
+            if (photos.Length != 2)
+            {
+                return -1;
+            }
+            else
+            {
+                this.MakeRequest();
+                return coeff;
+            }
         }
 
         // This methods receives as input a picture converted in byte[] and a path correspoding to an another picture
