@@ -7,16 +7,13 @@
                 <h1><%: Title %></h1>
             </hgroup>
             <p>
-                This is the home page of the Face Matching Application
-            </p>
-            <p>
-                The administrator of the sistem can handle the application database in a fast and easy way
+                This web application provides to the administrator of the sistem a compact, fast and easy way to handle the users database
             </p>
         </div>
     </section>
 </asp:Content>
 <asp:Content runat="server" ID="BodyContent" ContentPlaceHolderID="MainContent">
-    <h3>The administrator is suggested to perform the following actions:</h3>
+    <h3>The administrator is recommended to perform the following actions:</h3>
     <ol class="round">
         <li class="one">
             <h5>Log in</h5>
@@ -28,7 +25,7 @@
         </li>
         <li class="three">
             <h5>Verify the status of the system</h5>
-            The administrator can verify that the system works properly, according to the attributes of the registered users
+            The administrator can verify that the system works properly, according to the identity of the registered users
         </li>
     </ol>
 </asp:Content>

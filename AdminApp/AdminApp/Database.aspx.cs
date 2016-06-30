@@ -17,6 +17,7 @@ namespace AdminApp
             }
         }
 
+        // Fill the GridView
         private void Fill()
         {
             UsersBLL u = new UsersBLL();
@@ -24,6 +25,7 @@ namespace AdminApp
             GridView1.DataBind();
         }
 
+        // Insert a new user
         protected void Button1_Click(object sender, EventArgs e)
         {
             UsersBLL u = new UsersBLL();
@@ -33,6 +35,7 @@ namespace AdminApp
             u.Cellphone_Number = ((TextBox)GridView1.FooterRow.FindControl("TextBox4")).Text;
             u.Reg_Time = DateTime.Now.ToString("dd/MM/yyyy");
 
+            // Do some check
             if (check(((TextBox)GridView1.FooterRow.FindControl("TextBox1")).Text,
                 ((TextBox)GridView1.FooterRow.FindControl("TextBox2")).Text,
                 ((TextBox)GridView1.FooterRow.FindControl("TextBox3")).Text,
@@ -43,12 +46,14 @@ namespace AdminApp
             }
         }
 
+        // Edit an existing user
         protected void GridView1_RowEditing(object sender, GridViewEditEventArgs e)
         {
             GridView1.EditIndex = e.NewEditIndex;
             Fill();
         }
 
+        // Update the GridView
         protected void GridView1_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
             UsersBLL u = new UsersBLL();
@@ -70,6 +75,7 @@ namespace AdminApp
 
         protected bool check(string one, string two, string three, string four)
         {
+            // one digit between 1-9, one digit between 1-9, one digit between 0-9, 9 to 13 digits
             string pattern = "^[+][1-9][1-9][0-9]{9,13}$";
 
             if (one.Equals(""))
@@ -103,12 +109,14 @@ namespace AdminApp
             return true;
         }
 
+        // Cancel button handler
         protected void GridView1_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
             GridView1.EditIndex = -1;
             Fill();
         }
 
+        // Delete a user
         protected void GridView1_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             UsersBLL u = new UsersBLL();
@@ -119,6 +127,7 @@ namespace AdminApp
             Fill();
         }
 
+        // Show a new page
         protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
             GridView1.PageIndex = e.NewPageIndex;

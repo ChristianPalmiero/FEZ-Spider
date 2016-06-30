@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -16,7 +17,8 @@ namespace AdminApp
 
         public Users()
         {
-            con = new MySqlConnection("server=localhost; user id=Chris; password=christian8; database=sys");
+            con = new MySqlConnection(ConfigurationManager.ConnectionStrings["MysqlConnection"].ConnectionString);
+            //con = new MySqlConnection("server=localhost; user id=Chris; password=christian8; database=sys");
         }
 
         public DataSet SelectUsers()

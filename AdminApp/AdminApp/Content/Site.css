@@ -407,7 +407,10 @@ fieldset {
         font-size: 1.2em;
         margin: 5px 0 6px 5px;
         padding: 5px;
-        }
+    float: none;
+    left: -10px;
+    text-align: justify;
+}
 
     textarea {
         font-family: inherit;

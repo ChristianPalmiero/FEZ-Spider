@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -24,7 +25,7 @@ namespace AdminApp.Account
         {
             string username = ((TextBox)Login1.FindControl("UserName")).Text;
             string password = ((TextBox)Login1.FindControl("Password")).Text;
-            con = new MySqlConnection("server=localhost; user id=Chris; password=christian8; database=sys");
+            con = new MySqlConnection(ConfigurationManager.ConnectionStrings["MysqlConnection"].ConnectionString);
 
             if (!username.Equals("Admin"))
             {
@@ -44,7 +45,6 @@ namespace AdminApp.Account
             }
             try
             {
-                string nameDb = null;
                 string passwordDb = null;
 
                 // Sql query that retrieves the password associated to a well defined username
