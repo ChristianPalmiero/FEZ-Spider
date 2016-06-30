@@ -49,7 +49,7 @@ namespace ServerPack
         // Thread signal
         private ManualResetEvent allDone = new ManualResetEvent(false);
         // Database connection
-        private Database db = new Database("localhost", "Chris", "christian8", "sys");
+        private Database db = new Database("server=localhost; user id=Chris; password=christian8; database=sys");
         // Log file
         private string logFile = @"C:\Users\Chris\Documents\Visual Studio 2013\Projects\Server-2016-05-15\Current Log File.txt";
         FileStream fs;

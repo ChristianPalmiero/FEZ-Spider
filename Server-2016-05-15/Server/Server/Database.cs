@@ -12,10 +12,11 @@ namespace ServerPack
         private MySqlConnection con = null;
 
         // Constructor
-        public Database(string server, string user, string password, string db)
+        public Database(string connectionString)
         {
             // "server=localhost; user id=Chris; password=christian8; database=sys;"
-            con = new MySqlConnection("server=" + server + "; user id=" + user + "; password=" + password + "; database=" + db + ";");
+            con = new MySqlConnection(connectionString);
+            //con = new MySqlConnection("server=" + server + "; user id=" + user + "; password=" + password + "; database=" + db + ";");
         }
 
         // Check if the credentials (username + password) are valid
