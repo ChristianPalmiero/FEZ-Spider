@@ -69,7 +69,7 @@ namespace FaceMatching
                     faceArray = faces.ToArray();
                     //var faceRects = faces.Select(face => face.FaceRectangle);
                 }
-                using (Stream imageFileStream = File.OpenRead(imageFolderPath + "tmp.jpeg"))
+                using (Stream imageFileStream = File.OpenRead(imageFolderPath + "temp2.jpeg"))
                 {
                     var faces = await faceServiceClient.DetectAsync(imageFileStream, true, true);
                     foreach (var face in faces)

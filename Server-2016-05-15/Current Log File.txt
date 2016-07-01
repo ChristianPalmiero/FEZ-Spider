@@ -1,0 +1,6 @@
+IP Address and port: 192.168.100.4:8080, User: C, Timestamp: 01-07-2016 19:34:06
+Attempt of login with these credentials -> Username: C, Password: c
+IP Address and port: 192.168.100.4:8080, User: C, Timestamp: 01-07-2016 19:34:06
+Login OK
+IP Address and port: 192.168.100.4:8080, User: C, Timestamp: 01-07-2016 19:34:56
+Picture taken. Result: Non match

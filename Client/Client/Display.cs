@@ -8,6 +8,7 @@ using Gadgeteer.Modules.GHIElectronics;
 using GHI.Glide;
 using GHI.Glide.Display;
 using GHI.Glide.UI;
+using Microsoft.SPOT;
 
 namespace Client
 {
@@ -148,43 +149,78 @@ namespace Client
 
         private void OnTap(object sender)
         {
-            // Second window: CREDENTIALS
-            CredentialsWindow();
+            try
+            {
+                // Second window: CREDENTIALS
+                CredentialsWindow();
+            }
+            catch (Exception e)
+            {
+                Debug.Print(e.Message);   
+            }
         }
 
         private void GoToPicture(object sender)
         {
-            // Third window: TAKE A PICTURE
-            PictureWindow();
-        }
-
-        private void BackToLogin(object sender)
-        {
-            // Starting window: LOGIN
-            LoginWindow();
-        }
-
-        private void Query(object sender)
-        {
-            string userPass = username.Text + "@" + password.Text;
-            // The following FEZ method executes an SQL query and returns a bool:
-            // if true, the user is present in the DB and can proceed with the picture; if false, go back to the initial window
-            if (client.checkCredentials(userPass))
+            try
             {
                 // Third window: TAKE A PICTURE
                 PictureWindow();
             }
-            else
+            catch (Exception e)
             {
-                // Wrong credentials window
-                NotUserWindow();
-            } 
+                Debug.Print(e.Message);
+            }
+        }
+
+        private void BackToLogin(object sender)
+        {
+            try
+            {
+                // Starting window: LOGIN
+                LoginWindow();
+            }
+            catch (Exception e)
+            {
+                Debug.Print(e.Message);
+            }
+        }
+
+        private void Query(object sender)
+        {
+            try
+            {
+                string userPass = username.Text + "@" + password.Text;
+                // The following FEZ method executes an SQL query and returns a bool:
+                // if true, the user is present in the DB and can proceed with the picture; if false, go back to the initial window
+                if (client.checkCredentials(userPass))
+                {
+                    // Third window: TAKE A PICTURE
+                    PictureWindow();
+                }
+                else
+                {
+                    // Wrong credentials window
+                    NotUserWindow();
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Print(e.Message);
+            }
         }
 
         private void TakePicture(object sender)
         {
-            // The following method executes the face matching algorithm and is followed by the AfterMaching method
-            client.Matching();
+            try
+            {
+                // The following method executes the face matching algorithm and is followed by the AfterMaching method
+                client.Matching();
+            }
+            catch (Exception e)
+            {
+                Debug.Print(e.Message);
+            }
         }
 
         public void RetakePicture()
@@ -213,40 +249,54 @@ namespace Client
 
         private void GoToNonce(object sender)
         {
-            // Fourth window: NONCE CHECK
-            Nonce();
+            try
+            {
+                // Fourth window: NONCE CHECK
+                Nonce();
+            }
+            catch (Exception e)
+            {
+                Debug.Print(e.Message);
+            }
         }
 
         private void NonceCheck(object sender)
         {
-            // If the nonce field is empty, retry
-            if (nonce.Text.Equals(""))
+            try
             {
-                EmptyNonce();
-            }
-            else
-            {
-                // Nonce check
-                if (client.checkNonce(nonce.Text))
+                // If the nonce field is empty, retry
+                if (nonce.Text.Equals(""))
                 {
-                    // Last window: AUTHORIZED ACCESS
-                    Authorized();
+                    EmptyNonce();
                 }
                 else
                 {
-                    // If the client inserts a wrong nonce, he can retry for at most three times
-                    nonceCount++;
-                    if (nonceCount == 3)
+                    // Nonce check
+                    if (client.checkNonce(nonce.Text))
                     {
-                        nonceCount = 0;
-                        // Last window: NOT AUTHORIZED ACCESS
-                        NotAuthorized();
+                        // Last window: AUTHORIZED ACCESS
+                        Authorized();
                     }
                     else
                     {
-                        WrongNonce();
+                        // If the client inserts a wrong nonce, he can retry for at most three times
+                        nonceCount++;
+                        if (nonceCount == 3)
+                        {
+                            nonceCount = 0;
+                            // Last window: NOT AUTHORIZED ACCESS
+                            NotAuthorized();
+                        }
+                        else
+                        {
+                            WrongNonce();
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                Debug.Print(e.Message);
             }
         }
     }

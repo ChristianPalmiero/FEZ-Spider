@@ -28,17 +28,20 @@ namespace ServerPack
         //        new FaceServiceClient("6afdaca1cdf84d049fd8f75930d1b817");
         private string[] photos = new string[] {"",""};
         // Coefficient that indicates the confidence of whether two faces belong to one person
-        private float coeff;
+        private static float coeff;
+        // Semaphore for handling the asynchronous MakeRequest method 
+        private static Semaphore _pool;
 
         public float Matching(byte[] firstImage, string SecondPath)
         {
+            _pool = new Semaphore(0, 1);
+
             Task.Run(async () =>
             {
             Face[] face = await
                 UploadAndDetectFaces(firstImage,SecondPath);
             }).Wait();
 
-            //TODO: Controlli sul numero di facce, cioè elementi in photos
             if (photos.Length != 2)
             {
                 return -1;
@@ -46,6 +49,8 @@ namespace ServerPack
             else
             {
                 this.MakeRequest();
+                _pool.WaitOne();
+                Console.WriteLine("Coeff: " + coeff);
                 return coeff;
             }
         }
@@ -97,30 +102,40 @@ namespace ServerPack
         // Response Body: "isIdentical":bool, "confidence":float
         private async void MakeRequest()
         {
-            var client = new HttpClient();
-            var queryString = HttpUtility.ParseQueryString(string.Empty);
-
-            // Request headers
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "40c7e5bc21bd441d8b97a6097b09b5c2");
-
-            var uri = "https://api.projectoxford.ai/face/v1.0/verify?" + queryString;
-
-            HttpResponseMessage response;
-
-            // Request body
-            string json = "{\"faceId1\":\""+photos[0]+"\",\"faceId2\":\""+photos[1]+"\"}";
-            byte[] byteData = Encoding.UTF8.GetBytes(json);
-
-            using (var content = new ByteArrayContent(byteData))
+            try
             {
-                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                // Response body
-                response = await client.PostAsync(uri, content);
-                string s = response.Content.ReadAsStringAsync().Result;
-                var r = new Regex(@"[0-9]+\.[0-9]+");
-                Match m = r.Match(s);
-                coeff = float.Parse(m.Value, CultureInfo.InvariantCulture.NumberFormat);
-                Console.WriteLine(coeff);
+                var client = new HttpClient();
+                var queryString = HttpUtility.ParseQueryString(string.Empty);
+
+                // Request headers
+                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "40c7e5bc21bd441d8b97a6097b09b5c2");
+
+                var uri = "https://api.projectoxford.ai/face/v1.0/verify?" + queryString;
+
+                HttpResponseMessage response;
+
+                // Request body
+                string json = "{\"faceId1\":\"" + photos[0] + "\",\"faceId2\":\"" + photos[1] + "\"}";
+                byte[] byteData = Encoding.UTF8.GetBytes(json);
+
+                using (var content = new ByteArrayContent(byteData))
+                {
+                    content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                    // Response body
+                    response = await client.PostAsync(uri, content);
+                    string s = response.Content.ReadAsStringAsync().Result;
+                    var r = new Regex(@"[0-9]+\.[0-9]+");
+                    Match m = r.Match(s);
+                    coeff = float.Parse(m.Value, CultureInfo.InvariantCulture.NumberFormat);
+                    _pool.Release();
+                }
+            }
+            catch
+            {
+                coeff = 0;
+                Console.WriteLine("Exception");
+                _pool.Release();
+                return;
             }
         }
     }

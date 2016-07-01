@@ -108,7 +108,7 @@ namespace ServerPack
             StateObject state = new StateObject();
             state.receiving_stage = 0;
             state.workSocket = handler;
-            Console.WriteLine("Connected with : {0}", state.workSocket.LocalEndPoint.ToString());
+            Console.WriteLine("Connected with : {0}", state.workSocket.RemoteEndPoint.ToString());
             handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                 new AsyncCallback(ReadHeaderCallback), state);
         }
@@ -164,7 +164,7 @@ namespace ServerPack
                     {
                         case 0:
                             // Expect username and password 
-                            Console.WriteLine("Received from {0} username and password equal to {1}", state.workSocket.LocalEndPoint.ToString(), System.Text.Encoding.UTF8.GetString(state._contentDynamicBuff));
+                            Console.WriteLine("Received from {0} username and password equal to {1}", state.workSocket.RemoteEndPoint.ToString(), System.Text.Encoding.UTF8.GetString(state._contentDynamicBuff));
                             string[] tokens = System.Text.Encoding.UTF8.GetString(state._contentDynamicBuff).Split('@');
                             state.username = tokens[0];
                             state.password = tokens[1];
@@ -189,14 +189,14 @@ namespace ServerPack
                             break;
                         case 1:
                             // Expect the image
-                            state.coeff = 0; //to be commented
+                            //state.coeff = 0; //to be commented
                             state.img = RetrieveImgPath(state.username);
                             Console.WriteLine("Imagepath: {0}", state.img);
                             string ack = String.Format("Image correctly recived.{0}", Environment.NewLine);
-                            //var fs = new BinaryWriter(new FileStream(@"C:\Users\Public\Pictures\Sample Pictures\temp.jpeg", FileMode.Append, FileAccess.Write));
+                            //var fs = new BinaryWriter(new FileStream(@"C:\Users\Public\Pictures\Sample Pictures\temp2.jpeg", FileMode.Append, FileAccess.Write));
                             //fs.Write(state._contentDynamicBuff);
                             //fs.Close();
-                            //state.coeff = state.f.Matching(state._contentDynamicBuff, state.img);  to be uncommented
+                            state.coeff = state.f.Matching(state._contentDynamicBuff, state.img); 
                             // If coeff >= 0.5  => Same person
                             // Else if coef = -1 => The picture taken does not contain only one face
                             if (state.coeff == -1){
@@ -212,6 +212,7 @@ namespace ServerPack
                                 text = "Authorized access";
                                 WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
                                 Send(handler, "ACK");
+                                state.receiving_stage += 2;
                             }
                             else
                             {

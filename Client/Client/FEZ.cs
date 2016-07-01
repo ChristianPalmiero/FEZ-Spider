@@ -29,6 +29,9 @@ namespace Client
         private Camera camera;
         // The multicolor LED
         private MulticolorLED led;
+        // Threads
+        Thread workerThread;
+        Thread workerThreadOne;
 
         // Constructor
         public FEZ(Camera camera, MulticolorLED led, EthernetJ11D ethernetJ11D)
@@ -48,15 +51,22 @@ namespace Client
             ethernetJ11D.NetworkDown += ethernetJ11D_NetworkDown;
             // Set up the camera component
             camera.PictureCaptured += new Camera.PictureCapturedEventHandler(camera_PictureCaptured);
-            //new Thread(RunWebServer).Start();
-            new Thread(display.Start).Start();
-            Thread.Sleep(5000); 
-            new Thread(StartClient).Start();
+            //new Thread(display.Start).Start();
+            //Thread.Sleep(5000); 
+            //new Thread(StartClient).Start();
+            workerThread = new Thread(display.Start);
+            workerThread.Start();
+            Thread.Sleep(5000);
+            workerThreadOne = new Thread(StartClient);
+            workerThreadOne.Start();
         }
 
         private void ethernetJ11D_NetworkDown(GTM.Module.NetworkModule sender, GTM.Module.NetworkModule.NetworkState state)
         {
             Debug.Print("Network is down!");
+            workerThread.Join();
+            workerThreadOne.Join();
+            ProgramStarted();
         }
 
         private void ethernetJ11D_NetworkUp(GTM.Module.NetworkModule sender, GTM.Module.NetworkModule.NetworkState state)
@@ -90,7 +100,7 @@ namespace Client
                 // Create a TCP/IP socket
                 server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 // Set the timeout for synchronous receive methods to 5 second (5000 milliseconds)
-                server.ReceiveTimeout = 5000;
+                server.ReceiveTimeout = 60000;
                 // Connect to the remote endpoint
                 server.Connect(remoteEP);
                 Debug.Print("Connection to : " + remoteEP.ToString());
