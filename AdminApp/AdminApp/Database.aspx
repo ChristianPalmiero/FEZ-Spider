@@ -53,10 +53,11 @@
                     </ItemTemplate>
                 </asp:TemplateField>
             </Columns>
+            <PagerStyle HorizontalAlign="Center" />
         </asp:GridView>
 
 
-        <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" style="display: none" Text="Insert" UseSubmitBehavior="True" Width="95px"/>
+        <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="  Insert" UseSubmitBehavior="True" Width="80px"/>
 
 
     </article>

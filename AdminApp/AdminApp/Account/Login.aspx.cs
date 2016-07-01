@@ -31,6 +31,7 @@ namespace AdminApp.Account
             {
                 ScriptManager.RegisterStartupScript(this, typeof(Page), "MsgUpdate",
                                                                "alert('Wrong administrator username');", true);
+                return;
             }
 
             try
@@ -42,6 +43,7 @@ namespace AdminApp.Account
             {
                 ScriptManager.RegisterStartupScript(this, typeof(Page), "MsgUpdate",
                                                                "alert('Connection NOT valid');", true);
+                return;
             }
             try
             {
@@ -74,6 +76,7 @@ namespace AdminApp.Account
                     con.Close();
                     ScriptManager.RegisterStartupScript(this, typeof(Page), "MsgUpdate",
                                                                    "alert('Incorrect password');", true);
+                    return;
                 }
             }
             catch (Exception er)
@@ -81,6 +84,7 @@ namespace AdminApp.Account
                 con.Close();
                 ScriptManager.RegisterStartupScript(this, typeof(Page), "MsgUpdate",
                                                                "alert('" + er.Message + "');", true);
+                return;
             }
         }
     }

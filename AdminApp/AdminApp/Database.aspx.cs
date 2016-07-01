@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -75,38 +77,57 @@ namespace AdminApp
 
         protected bool check(string one, string two, string three, string four)
         {
-            // one digit between 1-9, one digit between 1-9, one digit between 0-9, 9 to 13 digits
-            string pattern = "^[+][1-9][1-9][0-9]{9,13}$";
+            try
+            {
+                // one digit between 1-9, one digit between 1-9, one digit between 0-9, 9 to 13 digits
+                string pattern = "^[+][1-9][1-9][0-9]{9,13}$";
 
-            if (one.Equals(""))
+                if (one.Equals(""))
+                {
+                    ScriptManager.RegisterStartupScript(this, typeof(Page), "MsgUpdate",
+                                                                      "alert('Empty username');", true);
+                    return false;
+                }
+                else if (!Regex.IsMatch(one, @"^[a-zA-Z0-9]+$"))
+                {
+                    ScriptManager.RegisterStartupScript(this, typeof(Page), "MsgUpdate",
+                                                      "alert('Only letters and numbers are allowed');", true);
+                    return false;
+                }
+                else if (two.Equals(""))
+                {
+                    ScriptManager.RegisterStartupScript(this, typeof(Page), "MsgUpdate",
+                                                                      "alert('Invalid password');", true);
+                    return false;
+                }
+                else if (Path.GetFileNameWithoutExtension(three).Equals(""))
+                {
+                    ScriptManager.RegisterStartupScript(this, typeof(Page), "MsgUpdate",
+                                                                   "alert('Not an image');", true);
+                    return false;
+                }
+                else if (!(three.EndsWith(".jpg") ||
+                    three.EndsWith(".gif") ||
+                    three.EndsWith(".bmp") ||
+                    three.EndsWith(".jpeg")))
+                {
+                    ScriptManager.RegisterStartupScript(this, typeof(Page), "MsgUpdate",
+                                                                   "alert('Not an image');", true);
+                    return false;
+                }
+                else if (!(System.Text.RegularExpressions.Regex.IsMatch(
+                    four, pattern)))
+                {
+                    ScriptManager.RegisterStartupScript(this, typeof(Page), "MsgUpdate",
+                                                                      "alert('Invalid cellphone number');", true);
+                    return false;
+                }
+                return true;
+            }
+            catch
             {
-                ScriptManager.RegisterStartupScript(this, typeof(Page), "MsgUpdate",
-                                                                  "alert('Invalid username');", true);
                 return false;
             }
-            else if (two.Equals(""))
-            {
-                ScriptManager.RegisterStartupScript(this, typeof(Page), "MsgUpdate",
-                                                                  "alert('Invalid password');", true);
-                return false;
-            }
-            else if (!(three.EndsWith(".jpg") ||
-                three.EndsWith(".gif") ||
-                three.EndsWith(".bmp") ||
-                three.EndsWith(".jpeg")))
-            {
-                ScriptManager.RegisterStartupScript(this, typeof(Page), "MsgUpdate",
-                                                               "alert('Not an image');", true);
-                return false;
-            }
-            else if (!(System.Text.RegularExpressions.Regex.IsMatch(
-                four, pattern)))
-            {
-                ScriptManager.RegisterStartupScript(this, typeof(Page), "MsgUpdate",
-                                                                  "alert('Invalid cellphone number');", true);
-                return false;
-            }
-            return true;
         }
 
         // Cancel button handler

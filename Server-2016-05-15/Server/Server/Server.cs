@@ -196,8 +196,9 @@ namespace ServerPack
                             //var fs = new BinaryWriter(new FileStream(@"C:\Users\Public\Pictures\Sample Pictures\temp.jpeg", FileMode.Append, FileAccess.Write));
                             //fs.Write(state._contentDynamicBuff);
                             //fs.Close();
-                            //state.coeff = state.f.Matching(state._contentDynamicBuff, state.img);
+                            //state.coeff = state.f.Matching(state._contentDynamicBuff, state.img);  to be uncommented
                             // If coeff >= 0.5  => Same person
+                            // Else if coef = -1 => The picture taken does not contain only one face
                             if (state.coeff == -1){
                                 text = "Picture taken. Result: the picture does not contain only one face; the user has to retake the picture";
                                 WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
@@ -386,8 +387,8 @@ namespace ServerPack
             // Set parameters
             string username = "l.chelini@icloud.com";
             string password = "cvbht";
-            string msgsender = "393347055531";
-            string destinationaddr = "393334556569";
+            string msgsender = "+393347055531";
+            string destinationaddr = "+393334556569";
             // Create ViaNettSMS object with username and password
             ViaNettSMS s = new ViaNettSMS(username, password);
             // Declare Result object returned by the SendSMS function
