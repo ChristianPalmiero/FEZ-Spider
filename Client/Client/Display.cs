@@ -223,16 +223,6 @@ namespace Client
             }
         }
 
-        public void RetakePicture()
-        {
-            // Load the XML string
-            Window window = GlideLoader.LoadWindow(Resources.GetString(Resources.StringResources.RetakePicture));
-            Glide.MainWindow = window;
-            // Back button event handler
-            Button backBtn = (Button)window.GetChildByName("back_button");
-            backBtn.TapEvent += GoToPicture;
-        }
-
         public void AfterMatching(bool flag)
         {
             if (flag)

@@ -63,15 +63,34 @@ namespace AdminApp
             u.Password = ((TextBox)GridView1.Rows[e.RowIndex].FindControl("TextBox6")).Text;
             u.Image_Path = ((TextBox)GridView1.Rows[e.RowIndex].FindControl("TextBox7")).Text;
             u.Cellphone_Number = ((TextBox)GridView1.Rows[e.RowIndex].FindControl("TextBox8")).Text;
-            if (check(((Label)GridView1.Rows[e.RowIndex].FindControl("Label1")).Text,
-                    ((TextBox)GridView1.Rows[e.RowIndex].FindControl("TextBox6")).Text,
-                    ((TextBox)GridView1.Rows[e.RowIndex].FindControl("TextBox7")).Text,
-                    ((TextBox)GridView1.Rows[e.RowIndex].FindControl("TextBox8")).Text))
+            if (u.Username.Equals("Admin"))
             {
-                u.Update(u);
-                u = null;
-                GridView1.EditIndex = -1;
-                Fill();
+                if (u.Password.Equals(""))
+                {
+                    ScriptManager.RegisterStartupScript(this, typeof(Page), "MsgUpdate",
+                                                                      "alert('Invalid password');", true);
+                    return;
+                }
+                else
+                {
+                    u.Update(u);
+                    u = null;
+                    GridView1.EditIndex = -1;
+                    Fill();
+                }
+            }
+            else
+            {
+                if (check(((Label)GridView1.Rows[e.RowIndex].FindControl("Label1")).Text,
+                        ((TextBox)GridView1.Rows[e.RowIndex].FindControl("TextBox6")).Text,
+                        ((TextBox)GridView1.Rows[e.RowIndex].FindControl("TextBox7")).Text,
+                        ((TextBox)GridView1.Rows[e.RowIndex].FindControl("TextBox8")).Text))
+                {
+                    u.Update(u);
+                    u = null;
+                    GridView1.EditIndex = -1;
+                    Fill();
+                }
             }
         }
 
@@ -142,10 +161,19 @@ namespace AdminApp
         {
             UsersBLL u = new UsersBLL();
             u.Username = ((Label)GridView1.Rows[e.RowIndex].FindControl("Label1")).Text;
-            u.Delete(u.Username);
-            u = null;
-            GridView1.EditIndex = -1;
-            Fill();
+            if (u.Username.Equals("Admin"))
+            {
+                ScriptManager.RegisterStartupScript(this, typeof(Page), "MsgUpdate",
+                                                                      "alert('Admin cannot be deleted');", true);
+                return;
+            }
+            else
+            {
+                u.Delete(u.Username);
+                u = null;
+                GridView1.EditIndex = -1;
+                Fill();
+            }
         }
 
         // Show a new page

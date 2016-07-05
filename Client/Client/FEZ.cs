@@ -99,7 +99,7 @@ namespace Client
                 IPEndPoint remoteEP = new IPEndPoint(ServerIP, port);
                 // Create a TCP/IP socket
                 server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                // Set the timeout for synchronous receive methods to 5 second (5000 milliseconds)
+                // Set the timeout for synchronous receive methods to 60 second (60000 milliseconds)
                 server.ReceiveTimeout = 60000;
                 // Connect to the remote endpoint
                 server.Connect(remoteEP);
@@ -151,12 +151,7 @@ namespace Client
             string response = SendImage(server, output);
             flag = false;
             Debug.Print("Response = " + response);
-            if ((response.IndexOf("NACKS")) == 0)
-            {
-                Debug.Print("Retake a picture");
-                display.RetakePicture();
-            }
-            else if ((response.IndexOf("ACK")) == 0)
+            if ((response.IndexOf("ACK")) == 0)
             {
                 Debug.Print("Face matching OK");
                 flag = true;

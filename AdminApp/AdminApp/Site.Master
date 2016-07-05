@@ -40,7 +40,7 @@
         <div class="content-wrapper">
             <div class="float-left">
                 <p class="site-title">
-                    <a runat="server">Face Matching Application</a>
+                    <a runat="server">Spider Lock Admin Web Application</a>
                 </p>
             </div>
             <div class="float-right">

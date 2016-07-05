@@ -44,7 +44,7 @@ namespace ServerPack
 
             if (photos.Length != 2)
             {
-                return -1;
+                return 0;
             }
             else
             {

@@ -169,13 +169,13 @@ namespace ServerPack
                             state.username = tokens[0];
                             state.password = tokens[1];
                             text = "Attempt of login with these credentials -> Username: " + state.username + ", Password: " + state.password;
-                            WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
+                            WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
                             control = CheckUserPass(System.Text.Encoding.UTF8.GetString(state._contentDynamicBuff));
                             if (control == true)
                             {
                                 // Send the ACK and move to the next stage
                                 text = "Login OK";
-                                WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
+                                WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
                                 Send(handler, "ACK");
                                 state.receiving_stage++;
                             }
@@ -183,7 +183,7 @@ namespace ServerPack
                             {
                                 // Send the NACK and remain in the current stage
                                 text = "Login Failed";
-                                WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
+                                WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
                                 Send(handler, "NACK");
                             }
                             break;
@@ -198,19 +198,13 @@ namespace ServerPack
                             //fs.Close();
                             state.coeff = state.f.Matching(state._contentDynamicBuff, state.img); 
                             // If coeff >= 0.5  => Same person
-                            // Else if coef = -1 => The picture taken does not contain only one face
-                            if (state.coeff == -1){
-                                text = "Picture taken. Result: the picture does not contain only one face; the user has to retake the picture";
-                                WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
-                                Send(handler, "NACKS");
-                            }
-                            else if (state.coeff >= 0.5)
+                            if (state.coeff >= 0.5)
                             {
                                 // Send the ACK and remain in the current stage
                                 text = "Picture taken. Result: Match";
-                                WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
+                                WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
                                 text = "Authorized access";
-                                WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
+                                WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
                                 Send(handler, "ACK");
                                 state.receiving_stage += 2;
                             }
@@ -218,7 +212,7 @@ namespace ServerPack
                             {
                                 // Send the NACK and move to the next stage
                                 text = "Picture taken. Result: Non match";
-                                WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
+                                WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
                                 Send(handler, "NACK");
                                 state.receiving_stage++;
                             }
@@ -226,21 +220,20 @@ namespace ServerPack
                         case 2:
                             // Expect the nonce
                             // Generate nonce
-                            //state.nonce = GenerateRandomNumber();
-                            state.nonce = "0000";
+                            state.nonce = GenerateRandomNumber();
                             text = "Nonce to be inserted equal to " + state.nonce;
-                                WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
+                            WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
                             Console.WriteLine("Generated nonce: " + state.nonce);
                             // Send nonce as sms
-                            //SendSMS(state.nonce);
+                            //SendSMS(state.nonce, state.username);
                             control = CheckNonce(System.Text.Encoding.UTF8.GetString(state._contentDynamicBuff), state.nonce);
                             if (control == true)
                             {
                                 // Send the ACK and move to the next stage
                                 text = "Nonce correctly inserted at attempt " + (state.cnt+1);
-                                WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
+                                WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
                                 text = "Authorized access";
-                                WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
+                                WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
                                 Send(handler, "ACK");
                                 state.receiving_stage++;
                             }
@@ -248,12 +241,12 @@ namespace ServerPack
                             {
                                 // Send the NACK and remain in the current stage, unless there is no available trial
                                 text = "Nonce not correctly inserted at attempt " + (state.cnt + 1);
-                                WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
+                                WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
                                 Send(handler, "NACK");
                                 if (state.cnt == 2)
                                 {
                                     text = "Failed access";
-                                    WriteLogFile(text, state.workSocket.LocalEndPoint.ToString(), state.username, logFile);
+                                    WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
                                     state.receiving_stage++;
                                 }
                             }
@@ -380,7 +373,7 @@ namespace ServerPack
             }
         }
 
-        private void SendSMS(String message)
+        private void SendSMS(String message, string user)
         {
             // This function uses files and services provided by : https://www.vianett.com/
             // In order to use it you shuld register first
@@ -389,7 +382,8 @@ namespace ServerPack
             string username = "l.chelini@icloud.com";
             string password = "cvbht";
             string msgsender = "+393347055531";
-            string destinationaddr = "+393334556569";
+            string destinationaddr = db.RetrieveCellPhone(user);
+            //string destinationaddr = "+393334556569";
             // Create ViaNettSMS object with username and password
             ViaNettSMS s = new ViaNettSMS(username, password);
             // Declare Result object returned by the SendSMS function

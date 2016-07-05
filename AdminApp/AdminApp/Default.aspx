@@ -7,7 +7,7 @@
                 <h1><%: Title %></h1>
             </hgroup>
             <p>
-                This web application provides to the administrator of the sistem a compact, fast and easy way to handle the users database
+                This web application provides to the administrator of the system a compact, fast and easy way to handle the users database
             </p>
         </div>
     </section>
