@@ -1,6 +1,14 @@
-IP Address and port: 192.168.100.4:8080, User: C, Timestamp: 01-07-2016 19:34:06
+IP Address and port: 192.168.100.2:49165, User: C, Timestamp: 05-07-2016 19:38:34
 Attempt of login with these credentials -> Username: C, Password: c
-IP Address and port: 192.168.100.4:8080, User: C, Timestamp: 01-07-2016 19:34:06
+IP Address and port: 192.168.100.2:49165, User: C, Timestamp: 05-07-2016 19:38:34
 Login OK
-IP Address and port: 192.168.100.4:8080, User: C, Timestamp: 01-07-2016 19:34:56
+IP Address and port: 192.168.100.2:49165, User: C, Timestamp: 05-07-2016 19:39:17
 Picture taken. Result: Non match
+IP Address and port: 192.168.100.2:49165, User: C, Timestamp: 05-07-2016 19:39:17
+Nonce to be inserted equal to 6923
+IP Address and port: 192.168.100.2:49165, User: C, Timestamp: 05-07-2016 19:39:26
+Nonce not correctly inserted at attempt 1
+IP Address and port: 192.168.100.2:49165, User: C, Timestamp: 05-07-2016 19:39:52
+Nonce correctly inserted at attempt 2
+IP Address and port: 192.168.100.2:49165, User: C, Timestamp: 05-07-2016 19:39:52
+Authorized access

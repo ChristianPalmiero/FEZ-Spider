@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Net;
 using System.Net.Mail;
+using System.Net.Mime;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -53,7 +54,6 @@ namespace ServerPack
         // Log file
         private string logFile = @"C:\Users\Chris\Documents\Visual Studio 2013\Projects\Server-2016-05-15\Current Log File.txt";
         FileStream fs;
-        // TODO: REMOVE THE CONTENT OF THE FILE WHEN THE EMAIL IS SENT
 
         public void StartListening()
         {
@@ -215,17 +215,17 @@ namespace ServerPack
                                 WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
                                 Send(handler, "NACK");
                                 state.receiving_stage++;
+                                // Generate nonce
+                                state.nonce = GenerateRandomNumber();
+                                text = "Nonce to be inserted equal to " + state.nonce;
+                                WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
+                                Console.WriteLine("Generated nonce: " + state.nonce);
+                                // Send nonce as sms
+                                //SendSMS(state.nonce, state.username);
                             }
                             break;
                         case 2:
                             // Expect the nonce
-                            // Generate nonce
-                            state.nonce = GenerateRandomNumber();
-                            text = "Nonce to be inserted equal to " + state.nonce;
-                            WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
-                            Console.WriteLine("Generated nonce: " + state.nonce);
-                            // Send nonce as sms
-                            //SendSMS(state.nonce, state.username);
                             control = CheckNonce(System.Text.Encoding.UTF8.GetString(state._contentDynamicBuff), state.nonce);
                             if (control == true)
                             {
@@ -253,6 +253,7 @@ namespace ServerPack
                             state.cnt++;
                             break;
                         case 3:
+                            SendEmail();
                             // Send the ACK and close the socket
                             Send(handler, "ACK");
                             Console.WriteLine("Closing the connection");
@@ -340,13 +341,15 @@ namespace ServerPack
             // Specify senders gmail address
             string SendersAddress = "l.chelini1@gmail.com";
             // Specify the address you want to sent Email to (it can be any valid email address)
-            string ReceiversAddress = "l.chelini@icloud.com";
+            string ReceiversAddress = "christian.alons@gmail.com";
             // Specify the password of the gmail account you are using to sent mail (pw of sender@gmail.com)
             const string SendersPassword = "loredo1993";
             // Write the subject of your mail
-            const string subject = "Testing";
+            const string subject = "Spider Lock log file";
             // Write the content of your mail
-            const string body = "Hi This Is my Mail From Application";
+            const string body = "Dear Admin, You can see attached the log file.";
+            // Create  the file attachment for this e-mail message
+	        Attachment data = new Attachment(logFile, MediaTypeNames.Application.Octet);
 
             try
             {
@@ -362,8 +365,16 @@ namespace ServerPack
                 };
                 // MailMessage represents a mail message: it is 4 parameters(From,TO,subject,body)
                 MailMessage message = new MailMessage(SendersAddress, ReceiversAddress, subject, body);
+                // Add time stamp information for the file
+                ContentDisposition disposition = data.ContentDisposition;
+                disposition.CreationDate = System.IO.File.GetCreationTime(logFile);
+                disposition.ModificationDate = System.IO.File.GetLastWriteTime(logFile);
+                disposition.ReadDate = System.IO.File.GetLastAccessTime(logFile);
+                // Add the file attachment to this e-mail message
+                message.Attachments.Add(data);
                 smtp.Send(message);
-                Console.WriteLine("Message Sent Successfully");
+                Console.WriteLine("Mail Sent Successfully");
+                System.IO.File.WriteAllText(logFile, string.Empty);
             }
             catch (Exception ex)
             {

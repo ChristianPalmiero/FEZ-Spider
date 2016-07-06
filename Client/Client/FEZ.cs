@@ -156,8 +156,13 @@ namespace Client
                 Debug.Print("Face matching OK");
                 flag = true;
             }
+            else
+            {
+                SendString(server, "Send me nonce");
+            }
             // Call a display method according to the face matching algorithm result
             display.AfterMatching(flag);
+
         }
 
         private string reciveAck(Socket server)
