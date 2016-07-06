@@ -99,8 +99,8 @@ namespace Client
                 IPEndPoint remoteEP = new IPEndPoint(ServerIP, port);
                 // Create a TCP/IP socket
                 server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                // Set the timeout for synchronous receive methods to 60 second (60000 milliseconds)
-                server.ReceiveTimeout = 60000;
+                // Set the timeout for synchronous receive methods to 120 second (120000 milliseconds)
+                server.ReceiveTimeout = 120000;
                 // Connect to the remote endpoint
                 server.Connect(remoteEP);
                 Debug.Print("Connection to : " + remoteEP.ToString());

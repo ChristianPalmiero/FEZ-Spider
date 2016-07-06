@@ -84,6 +84,7 @@ namespace ServerPack
             }
         }
 
+        // Retrieve the image path associated to a specific username
         public string RetrieveImage(string username)
         {
             try
@@ -125,6 +126,7 @@ namespace ServerPack
             }
         }
 
+        // Retrieve the cell phone associated to a specific username
         public string RetrieveCellPhone(string username)
         {
             try

@@ -43,6 +43,8 @@ namespace ServerPack
         public float coeff;
         // FaceMatching object
         public FaceMatching f = new FaceMatching();
+        // Check whether the nonce must be read
+        public bool goToNonce = false;
     }
 
     public class Server
@@ -189,18 +191,14 @@ namespace ServerPack
                             break;
                         case 1:
                             // Expect the image
-                            //state.coeff = 0; //to be commented
                             state.img = RetrieveImgPath(state.username);
                             Console.WriteLine("Imagepath: {0}", state.img);
                             string ack = String.Format("Image correctly recived.{0}", Environment.NewLine);
-                            //var fs = new BinaryWriter(new FileStream(@"C:\Users\Public\Pictures\Sample Pictures\temp2.jpeg", FileMode.Append, FileAccess.Write));
-                            //fs.Write(state._contentDynamicBuff);
-                            //fs.Close();
                             state.coeff = state.f.Matching(state._contentDynamicBuff, state.img); 
                             // If coeff >= 0.5  => Same person
                             if (state.coeff >= 0.5)
                             {
-                                // Send the ACK and remain in the current stage
+                                // Send the ACK and go to stage 3
                                 text = "Picture taken. Result: Match";
                                 WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
                                 text = "Authorized access";
@@ -210,11 +208,17 @@ namespace ServerPack
                             }
                             else
                             {
-                                // Send the NACK and move to the next stage
+                                // Send the NACK and increment the stage counter
                                 text = "Picture taken. Result: Non match";
                                 WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
                                 Send(handler, "NACK");
                                 state.receiving_stage++;
+                            }
+                            break;
+                        case 2:
+                            if (state.goToNonce == false)
+                            {
+                                Console.WriteLine("Received from {0} a string equal to {1}", state.workSocket.RemoteEndPoint.ToString(), System.Text.Encoding.UTF8.GetString(state._contentDynamicBuff));
                                 // Generate nonce
                                 state.nonce = GenerateRandomNumber();
                                 text = "Nonce to be inserted equal to " + state.nonce;
@@ -222,35 +226,38 @@ namespace ServerPack
                                 Console.WriteLine("Generated nonce: " + state.nonce);
                                 // Send nonce as sms
                                 //SendSMS(state.nonce, state.username);
-                            }
-                            break;
-                        case 2:
-                            // Expect the nonce
-                            control = CheckNonce(System.Text.Encoding.UTF8.GetString(state._contentDynamicBuff), state.nonce);
-                            if (control == true)
-                            {
-                                // Send the ACK and move to the next stage
-                                text = "Nonce correctly inserted at attempt " + (state.cnt+1);
-                                WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
-                                text = "Authorized access";
-                                WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
+                                state.goToNonce = true;
                                 Send(handler, "ACK");
-                                state.receiving_stage++;
                             }
                             else
                             {
-                                // Send the NACK and remain in the current stage, unless there is no available trial
-                                text = "Nonce not correctly inserted at attempt " + (state.cnt + 1);
-                                WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
-                                Send(handler, "NACK");
-                                if (state.cnt == 2)
+                                // Expect the nonce
+                                control = CheckNonce(System.Text.Encoding.UTF8.GetString(state._contentDynamicBuff), state.nonce);
+                                if (control == true)
                                 {
-                                    text = "Failed access";
+                                    // Send the ACK and move to the next stage
+                                    text = "Nonce correctly inserted at attempt " + (state.cnt + 1);
                                     WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
+                                    text = "Authorized access";
+                                    WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
+                                    Send(handler, "ACK");
                                     state.receiving_stage++;
                                 }
+                                else
+                                {
+                                    // Send the NACK and remain in the current stage, unless the three attempts have been wasted
+                                    text = "Nonce not correctly inserted at attempt " + (state.cnt + 1);
+                                    WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
+                                    Send(handler, "NACK");
+                                    if (state.cnt == 2)
+                                    {
+                                        text = "Failed access";
+                                        WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
+                                        state.receiving_stage++;
+                                    }
+                                }
+                                state.cnt++;
                             }
-                            state.cnt++;
                             break;
                         case 3:
                             SendEmail();
@@ -380,7 +387,7 @@ namespace ServerPack
             {
                 Console.WriteLine("Exception in sending the email");
                 Console.WriteLine(ex.Message);
-                Console.ReadKey();
+                return;
             }
         }
 
