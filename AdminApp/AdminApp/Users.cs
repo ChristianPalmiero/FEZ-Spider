@@ -14,6 +14,7 @@ namespace AdminApp
         MySqlCommand cmd;
         MySqlDataAdapter sda;
         DataSet ds;
+        DataTable dt;
 
         public Users()
         {
@@ -21,13 +22,21 @@ namespace AdminApp
             //con = new MySqlConnection("server=localhost; user id=Chris; password=christian8; database=sys");
         }
 
-        public DataSet SelectUsers()
+        public DataTable SelectUsers()
         {
             sda = new MySqlDataAdapter(@"SELECT Username, Password, Reg_time, Image_path, Cell_Phone_Number
                                     FROM users", con);
             ds = new DataSet();
-            sda.Fill(ds);
-            return ds;
+            dt = new DataTable();
+            sda.Fill(ds, "Users");
+            dt = ds.Tables["Users"];
+            //Show passwords with a passwordchar = '*'
+            int columnNumber = 1;
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                dt.Rows[i][columnNumber] = new String('*', dt.Rows[i][columnNumber].ToString().Length);
+            }
+            return dt;
         }
 
         public void InsertUser(UsersBLL bll)

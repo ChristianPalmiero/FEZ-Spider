@@ -21,10 +21,10 @@
                 </asp:TemplateField>
                 <asp:TemplateField HeaderText="Password">
                     <EditItemTemplate>
-                        <asp:TextBox ID="TextBox6" runat="server" Text='<%# Bind("Password") %>'></asp:TextBox>
+                        <asp:TextBox ID="TextBox6" runat="server" type="password" Text='<%# Bind("Password") %>'></asp:TextBox>
                     </EditItemTemplate>
                     <FooterTemplate>
-                        <asp:TextBox ID="TextBox2" runat="server" Width="180px"></asp:TextBox>
+                        <asp:TextBox ID="TextBox2" runat="server" Width="180px" type="password"></asp:TextBox>
                     </FooterTemplate>
                     <ItemTemplate>
                         <asp:Label ID="Label2" runat="server" Text='<%# Bind("Password") %>'></asp:Label>

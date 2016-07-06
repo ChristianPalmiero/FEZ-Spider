@@ -14,7 +14,7 @@ namespace AdminApp
         public string Cellphone_Number { get; set; }
         public string Reg_Time { get; set; }
 
-        public DataSet Select()
+        public DataTable Select()
         {
             Users u = new Users();
             return u.SelectUsers();
