@@ -67,13 +67,6 @@ namespace ServerPack
             Socket listener = new Socket(AddressFamily.InterNetwork,
                 SocketType.Stream, ProtocolType.Tcp);
 
-            // Create the Log file
-            if (File.Exists(logFile))
-            {
-                File.Delete(logFile);
-            }
-            fs = File.Create(logFile);
-            fs.Close();
             // Bind the socket to the local endpoint and listen for incoming connections
             try
             {
@@ -109,7 +102,14 @@ namespace ServerPack
             // Create the state object
             StateObject state = new StateObject();
             state.receiving_stage = 0;
-            state.workSocket = handler;
+            state.workSocket = handler;            
+            // Create the Log file
+            if (!File.Exists(logFile))
+            {
+                File.Delete(logFile);
+            }
+            fs = File.Create(logFile);
+            fs.Close();
             Console.WriteLine("Connected with : {0}", state.workSocket.RemoteEndPoint.ToString());
             handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                 new AsyncCallback(ReadHeaderCallback), state);
@@ -225,7 +225,7 @@ namespace ServerPack
                                 WriteLogFile(text, state.workSocket.RemoteEndPoint.ToString(), state.username, logFile);
                                 Console.WriteLine("Generated nonce: " + state.nonce);
                                 // Send nonce as sms
-                                //SendSMS(state.nonce, state.username);
+                                SendSMS(state.nonce, state.username);
                                 state.goToNonce = true;
                                 Send(handler, "ACK");
                             }
@@ -372,16 +372,11 @@ namespace ServerPack
                 };
                 // MailMessage represents a mail message: it is 4 parameters(From,TO,subject,body)
                 MailMessage message = new MailMessage(SendersAddress, ReceiversAddress, subject, body);
-                // Add time stamp information for the file
-                ContentDisposition disposition = data.ContentDisposition;
-                disposition.CreationDate = System.IO.File.GetCreationTime(logFile);
-                disposition.ModificationDate = System.IO.File.GetLastWriteTime(logFile);
-                disposition.ReadDate = System.IO.File.GetLastAccessTime(logFile);
                 // Add the file attachment to this e-mail message
                 message.Attachments.Add(data);
                 smtp.Send(message);
                 Console.WriteLine("Mail Sent Successfully");
-                System.IO.File.WriteAllText(logFile, string.Empty);
+                message.Dispose();
             }
             catch (Exception ex)
             {
@@ -397,9 +392,9 @@ namespace ServerPack
             // In order to use it you shuld register first
 
             // Set parameters
-            string username = "l.chelini@icloud.com";
-            string password = "cvbht";
-            string msgsender = "+393347055531";
+            string username = "christian.alons@gmail.com";
+            string password = "6z0u";
+            string msgsender = "+393334556569";
             string destinationaddr = db.RetrieveCellPhone(user);
             //string destinationaddr = "+393334556569";
             // Create ViaNettSMS object with username and password

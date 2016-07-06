@@ -34,7 +34,7 @@ namespace AdminApp
             int columnNumber = 1;
             for (int i = 0; i < dt.Rows.Count; i++)
             {
-                dt.Rows[i][columnNumber] = new String('*', dt.Rows[i][columnNumber].ToString().Length);
+                dt.Rows[i][columnNumber] = "*****";
             }
             return dt;
         }

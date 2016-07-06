@@ -1,0 +1,12 @@
+IP Address and port: 192.168.100.2:49178, User: L, Timestamp: 06-07-2016 17:30:33
+Attempt of login with these credentials -> Username: L, Password: l
+IP Address and port: 192.168.100.2:49178, User: L, Timestamp: 06-07-2016 17:30:33
+Login OK
+IP Address and port: 192.168.100.2:49178, User: L, Timestamp: 06-07-2016 17:31:07
+Picture taken. Result: Non match
+IP Address and port: 192.168.100.2:49178, User: L, Timestamp: 06-07-2016 17:31:07
+Nonce to be inserted equal to 9262
+IP Address and port: 192.168.100.2:49178, User: L, Timestamp: 06-07-2016 17:31:43
+Nonce correctly inserted at attempt 1
+IP Address and port: 192.168.100.2:49178, User: L, Timestamp: 06-07-2016 17:31:43
+Authorized access
