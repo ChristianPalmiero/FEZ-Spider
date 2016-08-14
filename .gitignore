@@ -187,8 +187,3 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
-
-# Spider Lock Folders
-CameraApp/**/*
-Display/**/*
-MYSQLApp/**/*
