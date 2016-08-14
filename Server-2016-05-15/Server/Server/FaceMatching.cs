@@ -133,7 +133,7 @@ namespace ServerPack
             catch
             {
                 coeff = 0;
-                Console.WriteLine("Exception");
+                //Console.WriteLine("Exception");
                 _pool.Release();
                 return;
             }

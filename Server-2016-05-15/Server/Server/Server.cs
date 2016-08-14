@@ -380,8 +380,8 @@ namespace ServerPack
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception in sending the email");
-                Console.WriteLine(ex.Message);
+                //Console.WriteLine("Exception in sending the email");
+                //Console.WriteLine(ex.Message);
                 return;
             }
         }
@@ -428,7 +428,7 @@ namespace ServerPack
         {
             Random rnd = new Random(DateTime.Now.Millisecond);
             int c = rnd.Next(1000, 9999);
-            Console.WriteLine("Casual number format int is {0}", c);
+            //Console.WriteLine("Casual number format int is {0}", c);
             String number = c.ToString();
             Console.WriteLine("Casual number format string is {0}", number);
             return number;
