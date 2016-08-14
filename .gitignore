@@ -189,6 +189,6 @@ _Pvt_Extensions/
 ModelManifest.xml
 
 # Spider Lock Folders
-/CameraApp/
-/Display/
-/MYSQLApp/
+CameraApp/*
+Display/*
+MYSQLApp/*
