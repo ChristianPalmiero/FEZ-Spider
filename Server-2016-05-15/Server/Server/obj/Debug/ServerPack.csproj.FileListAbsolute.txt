@@ -1,9 +1,0 @@
-C:\Users\Chris\Documents\Visual Studio 2013\Projects\Server-2016-05-15\Server\Server\obj\Debug\ServerPack.csprojResolveAssemblyReference.cache
-C:\Users\Chris\Documents\Visual Studio 2013\Projects\Server-2016-05-15\Server\Server\obj\Debug\Server.exe
-C:\Users\Chris\Documents\Visual Studio 2013\Projects\Server-2016-05-15\Server\Server\obj\Debug\Server.pdb
-C:\Users\Chris\Documents\Visual Studio 2013\Projects\Server-2016-05-15\Server\Server\bin\Debug\Server.exe.config
-C:\Users\Chris\Documents\Visual Studio 2013\Projects\Server-2016-05-15\Server\Server\bin\Debug\Server.exe
-C:\Users\Chris\Documents\Visual Studio 2013\Projects\Server-2016-05-15\Server\Server\bin\Debug\Server.pdb
-C:\Users\Chris\Documents\Visual Studio 2013\Projects\Server-2016-05-15\Server\Server\bin\Debug\Microsoft.ProjectOxford.Face.dll
-C:\Users\Chris\Documents\Visual Studio 2013\Projects\Server-2016-05-15\Server\Server\bin\Debug\Newtonsoft.Json.dll
-C:\Users\Chris\Documents\Visual Studio 2013\Projects\Server-2016-05-15\Server\Server\bin\Debug\Newtonsoft.Json.xml
