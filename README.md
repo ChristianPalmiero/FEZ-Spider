@@ -4,7 +4,7 @@ First, the end user inserts his credentials (username and password); then, he ta
 
 ## Components
 The system consists of:
-* a touch screen that allows the final user to insert his credentials and the onetime
+* a touch screen that allows the final user to insert his credentials and the one-time
 password sent by the system via SMS;
 * a camera that takes the picture of the user face;
 * a LED that indicates, using an intuitive color system, whether the user has
