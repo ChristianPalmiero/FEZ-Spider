@@ -4,4 +4,4 @@ First, the end user inserts his credentials (username and password); then, he ta
 
 # Details
 Detailed documentation [here](Report.pdf).</br>
-Presentation & slides [here](Spider Lock Pitch.pdf).
+Presentation & slides [here](./Spider Lock Pitch.pdf).
